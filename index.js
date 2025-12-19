@@ -1,8 +1,18 @@
+const express = require("express");
+const http = require("http");
+const { Server } = require("socket.io");
+require("dotenv").config();
+
+const app = express();
+
 const PORT = process.env.PORT || 8900;
 
-const io = require("socket.io")(PORT, {
+const server = http.createServer(app);
+
+const io = new Server(server, {
   cors: {
     origin: process.env.CLIENT_URL,
+    methods: ["GET", "POST"],
   },
 });
 
@@ -41,4 +51,12 @@ io.on("connection", (socket) => {
     removeUser(socket.id);
     io.emit("getUsers", users);
   });
+});
+
+app.get("/", (req, res) => {
+  res.send("Socket server running");
+});
+
+server.listen(PORT, () => {
+  console.log("Socket server running on port", PORT);
 });
