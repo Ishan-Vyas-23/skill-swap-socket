@@ -22,6 +22,8 @@ const getUser = (userID) => {
 };
 
 io.on("connection", (socket) => {
+  console.log("a user connected");
+
   socket.on("addUser", (userID) => {
     userID ? addUser(userID, socket.id) : null;
     io.emit("getUsers", users);
